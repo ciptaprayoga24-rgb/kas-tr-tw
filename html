@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telarmalaka Hyper-Sovereign Omnivault v6.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #010206; }
+        .font-luxury { font-family: 'Cinzel', serif; }
+        .gold-glow { box-shadow: 0 0 50px -10px rgba(234, 179, 8, 0.2); }
+        .emerald-glow { box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.15); }
+        .glass-panel { background: rgba(8, 12, 24, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #010206; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen selection:bg-amber-400 selection:text-black">
+
+    <nav class="border-b border-amber-500/10 bg-slate-950/90 backdrop-blur-3xl sticky top-0 z-50 px-8 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
+            <div>
+                <div class="flex items-center gap-3 justify-center lg:justify-start">
+                    <div class="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,1)] animate-pulse"></div>
+                    <h1 class="text-lg font-luxury tracking-[0.3em] bg-gradient-to-r from-yellow-100 via-amber-400 to-yellow-600 bg-clip-text text-transparent font-black">
+                        TELARMALAKA OMNIVAULT v6.0
+                    </h1>
+                </div>
+                <p class="text-[9px] text-slate-500 uppercase tracking-[0.35em] font-extrabold mt-1 text-center lg:text-left">Sistem Finansial & Otoritas Makro Komunitas Premium</p>
+            </div>
+            
+            <div class="flex bg-slate-900/60 p-1 rounded-xl border border-slate-800 shadow-2xl">
+                <button id="role-warga" onclick="switchRole('warga')" class="text-xs font-bold px-5 py-2.5 rounded-lg transition duration-300">
+                    🏢 Elite Citizen Portal
+                </button>
+                <button id="role-sekretaris" onclick="switchRole('sekretaris')" class="text-xs font-bold px-5 py-2.5 rounded-lg transition duration-300">
+                    🔮 Secretarial Suite
+                </button>
+                <button id="role-rt_rw" onclick="switchRole('rt_rw')" class="text-xs font-bold px-5 py-2.5 rounded-lg transition duration-300">
+                    👑 Supreme Command RT/RW
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-8 py-10 space-y-10">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-gradient-to-r from-slate-950 via-[#070714] to-slate-950 border border-violet-500/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 shadow-[0_0_60px_-20px_rgba(139,92,246,0.25)]">
+                <div class="space-y-1">
+                    <span class="bg-violet-500/10 text-violet-400 text-[9px] font-extrabold uppercase tracking-[0.2em] px-2.5 py-1 rounded-md border border-violet-500/20">Dekrit Utama Sekretariat</span>
+                    <p id="board-headline" class="text-sm text-slate-200 font-medium tracking-wide">"Memuat dekrit..."</p>
+                </div>
+                <div class="flex items-center gap-2 view-sekretaris">
+                    <input type="text" id="input-headline" placeholder="Ketik maklumat baru..." class="bg-slate-950 border border-slate-800 text-xs rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-violet-500 w-52">
+                    <button onclick="broadcastHeadline()" class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition">Broadcast</button>
+                </div>
+            </div>
+            
+            <div class="bg-slate-950/40 border border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[9px] font-bold uppercase text-amber-400 tracking-wider">Plebisit / Polling Warga</span>
+                        <button onclick="resetPoll()" class="text-[9px] text-rose-400 hover:underline view-sekretaris">Reset</button>
+                    </div>
+                    <h4 id="poll-question" class="text-xs font-bold text-slate-200">"Apakah Anda setuju dengan modernisasi Pos Ronda utama?"</h4>
+                </div>
+                <div class="space-y-2 mt-3">
+                    <div class="flex items-center gap-2">
+                        <button onclick="vote('yes')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-[10px] px-3 py-1.5 rounded-lg font-bold">Setuju</button>
+                        <button onclick="vote('no')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-[10px] px-3 py-1.5 rounded-lg font-bold">Tolak</button>
+                        <div class="text-[11px] text-slate-400 ml-auto font-medium">
+                            👍 <span id="poll-yes-pct">0%</span> | 👎 <span id="poll-no-pct">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Akumulasi Bruto (Inflow)</p>
+                <p id="card-masuk" class="text-xl font-extrabold text-emerald-400 mt-2">Rp 0</p>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Akumulasi Alokasi (Outflow)</p>
+                <p id="card-keluar" class="text-xl font-extrabold text-rose-400 mt-2">Rp 0</p>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/10 gold-glow bg-gradient-to-b from-slate-950 via-[#0d0a04] to-slate-950">
+                <p class="text-amber-400 text-[10px] font-bold uppercase tracking-widest">Kas Operasional Utama</p>
+                <p id="card-saldo" class="text-2xl font-black text-slate-100 mt-2">Rp 0</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-1 gap-3">
+                <div class="bg-slate-950/60 p-3 rounded-xl border border-purple-500/10 flex justify-between items-center">
+                    <div>
+                        <p class="text-[9px] text-purple-400 font-bold uppercase tracking-wider">Mitigasi Sosial (15%)</p>
+                        <p id="card-sosial" class="text-xs font-extrabold text-slate-200 mt-0.5">Rp 0</p>
+                    </div>
+                </div>
+                <div class="bg-slate-950/60 p-3 rounded-xl border border-blue-500/10 flex justify-between items-center">
+                    <div>
+                        <p class="text-[9px] text-blue-400 font-bold uppercase tracking-wider">Infrastruktur Blok (10%)</p>
+                        <p id="card-pembangunan" class="text-xs font-extrabold text-slate-200 mt-0.5">Rp 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="space-y-6">
+                
+                <div class="view-warga space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-emerald-500/10 emerald-glow">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-4 flex items-center gap-2">💳 Quantum Payment Gateway</h2>
+                        <form id="form-warga-bayar-v6" class="space-y-4">
+                            <div>
+                                <label class="block text-[9px] text-slate-400 uppercase font-bold tracking-wider">Nomor Rumah / Nama KK</label>
+                                <input type="text" id="v6-pay-warga" placeholder="Contoh: Blok A-12 (Bp. Haryono)" class="w-full mt-1.5 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-emerald-500" required>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[9px] text-slate-400 uppercase font-bold tracking-wider">Peruntukan Dana</label>
+                                    <select id="v6-pay-kategori" class="w-full mt-1.5 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                                        <option value="Iuran Wajib Bulanan">Iuran Wajib Bulanan</option>
+                                        <option value="Dana Sosial Sukarela">Dana Sosial Sukarela</option>
+                                        <option value="Iuran Keamanan Khusus">Kas Keamanan VIP</option>
+                                        <option value="Donasi Pembangunan">Pembangunan Fisik</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] text-slate-400 uppercase font-bold tracking-wider">Metode Settlement</label>
+                                    <select id="v6-pay-metode" class="w-full mt-1.5 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+                                        <option value="BCA Platinum VA">BCA Platinum VA</option>
+                                        <option value="QRIS Omni-Glow">QRIS Omni-Glow</option>
+                                        <option value="Secure Crypto Vault">Crypto Vault (BTC)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-slate-400 uppercase font-bold tracking-wider">Besaran Transaksi (Rp)</label>
+                                <input type="text" id="v6-pay-nominal" placeholder="250.000" oninput="formatInputCurrency(this)" class="w-full mt-1.5 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 font-bold focus:outline-none focus:border-emerald-400" required>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-black text-xs py-3.5 rounded-xl transition shadow-lg shadow-emerald-500/10">
+                                Otentikasi & Setor Pembayaran
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">🧾 Arsip Kuitansi Digital Anda</h2>
+                        <div id="warga-receipt-box" class="space-y-2 max-h-48 overflow-y-auto text-xs"></div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-4 flex items-center gap-2">✦ Ajukan Dokumen Pengantar</h2>
+                        <form id="form-warga-surat" class="space-y-4">
+                            <input type="text" id="warga-surat-nama" placeholder="Nama Lengkap Pemohon" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs focus:outline-none focus:border-indigo-400" required>
+                            <input type="text" id="warga-surat-perlu" placeholder="Urus KTP / KK / Surat Domisili" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs focus:outline-none focus:border-indigo-400" required>
+                            <button type="submit" class="w-full bg-indigo-600/20 text-indigo-400 font-bold text-xs py-2.5 rounded-xl border border-indigo-500/30 transition">Kirim ke Sistem Birokrasi</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="view-sekretaris space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-violet-500/10">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-violet-400 mb-4">📦 Registrasi Inventaris & Aset Blok</h2>
+                        <form id="form-sek-asset" class="space-y-4">
+                            <input type="text" id="asset-nama" placeholder="Nama Barang (Contoh: Tenda Pos Ronda)" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-violet-400" required>
+                            <select id="asset-kondisi" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+                                <option value="Sangat Baik">Kondisi: Sangat Baik</option>
+                                <option value="Butuh Perbaikan">Kondisi: Butuh Perbaikan</option>
+                            </select>
+                            <button type="submit" class="w-full bg-violet-600 text-white font-bold text-xs py-2.5 rounded-xl transition">Daftarkan Aset</button>
+                        </form>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-violet-400 mb-4">📅 Agendakan Kegiatan Warga</h2>
+                        <form id="form-sek-agenda" class="space-y-4">
+                            <input type="text" id="agenda-teks" placeholder="Nama Rapat / Kegiatan Sosial" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-violet-400" required>
+                            <input type="date" id="agenda-tgl" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-violet-400" required>
+                            <button type="submit" class="w-full bg-violet-600 text-white font-bold text-xs py-2.5 rounded-xl transition">Daftarkan Jadwal</button>
+                        </form>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">🗳️ Set Pertanyaan Polling</h2>
+                        <input type="text" id="input-poll-q" placeholder="Ketik topik jajak pendapat..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs focus:outline-none text-slate-200 mb-2">
+                        <button onclick="launchPoll()" class="w-full bg-slate-800 text-slate-300 text-xs py-2 rounded-xl border border-slate-700 font-bold">Luncurkan Plebisit</button>
+                    </div>
+                </div>
+
+                <div class="view-rt_rw space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-amber-500/20">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-4">👑 Injeksi Anggaran Langsung</h2>
+                        <form id="form-rt-kas" class="space-y-4">
+                            <select id="rt-jenis" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+                                <option value="masuk">Pemasukan Kas Negara RT</option>
+                                <option value="keluar">Pengeluaran Belanja Logistik</option>
+                            </select>
+                            <input type="text" id="rt-keterangan" placeholder="Deskripsi peruntukan dana..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-amber-400" required>
+                            <div>
+                                <input type="text" id="rt-nominal" placeholder="Nominal Rp" oninput="formatInputCurrency(this)" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 font-bold focus:outline-none focus:border-amber-400" required>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-black text-xs py-3 rounded-xl transition">Eksekusi Perintah Anggaran</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">📦 Status Inventaris Komunitas</h2>
+                    <div id="container-assets" class="space-y-2 text-xs"></div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">📅 Agenda Komunitas Terjadwal</h2>
+                    <div id="container-agenda" class="space-y-3"></div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800/80 view-warga">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-4">📣 Pengaduan & Aspirasi Publik</h2>
+                    <form id="form-warga-aspirasi" class="space-y-3">
+                        <textarea id="warga-aspirasi-teks" placeholder="Laporkan infrastruktur rusak atau saran di sini..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 h-20 focus:outline-none focus:border-blue-500" required></textarea>
+                        <button type="submit" class="w-full bg-blue-600/20 text-blue-400 font-bold border border-blue-500/30 text-xs py-2 rounded-xl">Kirim Berkas Laporan</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-200 tracking-wide">Buku Besar Audit Finansial Sovereign</h2>
+                            <p class="text-xs text-slate-400">Arus dana komunal tervalidasi mutlak</p>
+                        </div>
+                        <div class="flex gap-2 view-rt_rw">
+                            <button onclick="exportData()" class="text-[10px] bg-slate-950 border border-slate-800 text-slate-300 px-3 py-2 rounded-xl font-bold uppercase tracking-wider">Export Ledger</button>
+                            <button onclick="wipeEngine()" class="text-[10px] text-rose-400 bg-rose-950/20 border border-rose-500/20 px-3 py-2 rounded-xl font-bold uppercase tracking-wider">Wipe Storage</button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 text-[10px] uppercase tracking-widest">
+                                    <th class="p-3.5">Tanggal</th>
+                                    <th class="p-3.5">Keterangan Aliran</th>
+                                    <th class="p-3.5">Kategori/Sektor</th>
+                                    <th class="p-3.5 text-right">Volume Dana</th>
+                                    <th class="p-3.5 text-center view-rt_rw">Modifikasi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledger-body" class="text-xs text-slate-300 divide-y divide-slate-800/30"></tbody>
+                        </table>
+                        <div id="ledger-empty" class="hidden text-center py-8 text-slate-500 text-xs">Basis data kosong. Belum ada mutasi keuangan.</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">📥 Kliring Gerbang Pembayaran Masuk</h2>
+                    <p class="text-[11px] text-slate-400 mb-4">Setoran penagihan warga yang menunggu kliring otorisasi Ketua RT</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="text-[10px] text-slate-500 border-b border-slate-800 uppercase tracking-wider bg-slate-950">
+                                    <th class="p-2.5">Asal Rumah</th>
+                                    <th class="p-2.5">Sektor Iuran</th>
+                                    <th class="p-2.5">Channel</th>
+                                    <th class="p-2.5 text-right">Volume</th>
+                                    <th class="p-2.5 text-center view-rt_rw">Otoritas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="queue-body" class="divide-y divide-slate-800/40 text-slate-300"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-4">📄 Ruang Dokumen Surat Pengantar</h3>
+                        <div id="container-surat" class="space-y-3"></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800/80">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-4">💬 Panel Moderasi Aspirasi</h3>
+                        <div id="container-aspirasi" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800/80">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">🔒 Quantum Audit Trail Jurnal (Log Sistem)</h3>
+                    <div id="sys-logs" class="bg-slate-950 p-3 rounded-xl h-32 overflow-y-auto text-[11px] font-mono text-slate-400 space-y-1"></div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let activeRole = localStorage.getItem('v6_role') || 'warga';
+
+        let dbKas = JSON.parse(localStorage.getItem('v6_db_kas')) || [
+            { tanggal: '2026-07-02', keterangan: 'Suntikan Dana Hibah Wilayah', sektor: 'Hibah Negara', jenis: 'masuk', nominal: 35000000 },
+            { tanggal: '2026-07-05', keterangan: 'Restorasi Taman Blok Alfa', sektor: 'Donasi Pembangunan', jenis: 'keluar', nominal: 4500000 }
+        ];
+
+        let dbQueueBayar = JSON.parse(localStorage.getItem('v6_db_queue')) || [
+            { id: 'TX-9021', entitas: 'Rumah A-10 (Bp. Jaka)', kategori: 'Iuran Wajib Bulanan', metode: 'BCA Platinum VA', nominal: 250000, status: 'Pending' }
+        ];
+
+        let dbSurat = JSON.parse(localStorage.getItem('v6_db_surat')) || [
+            { nama: 'Rian Hidayat', keperluan: 'Pengantar Urus Paspor', status: 'Pending', noSurat: '' }
+        ];
+
+        let dbAspirasi = JSON.parse(localStorage.getItem('v6_db_aspirasi')) || [
+            { teks: 'Mohon penambahan speedtrap di tikungan Blok C.', status: 'Dalam Peninjauan' }
+        ];
+
+        let dbAgenda = JSON.parse(localStorage.getItem('v6_db_agenda')) || [
+            { teks: 'Gala Dinner Komunitas & Evaluasi Kinerja', tanggal: '2026-07-20' }
+        ];
+
+        let dbAssets = JSON.parse(localStorage.getItem('v6_db_assets')) || [
+            { nama: 'Generator Listrik Cadangan', kondisi: 'Sangat Baik' },
+            { nama: 'Tenda Pos Ronda Utama', kondisi: 'Butuh Perbaikan' }
+        ];
+
+        let dbLogs = JSON.parse(localStorage.getItem('v6_db_logs')) || [
+            { time: '12:00:00', msg: 'Sistem Terenkripsi v6.0 Berhasil Diinisialisasi.', type: 'sys' }
+        ];
+
+        let dbPoll = JSON.parse(localStorage.getItem('v6_db_poll')) || { question: "Apakah Anda setuju dengan modernisasi Pos Ronda utama?", yes: 15, no: 3 };
+        let headlineText = localStorage.getItem('v6_headline') || 'Sovereign Core System Telarmalaka mengudara penuh. Transparansi mutlak tercapai.';
+
+        // Helper: Formatting Raw Number to Currency String
+        function formatIDR(val) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
+        }
+
+        // Real-time Input Numeric Formatter (Titik Otomatis)
+        function formatInputCurrency(input) {
+            let value = input.value.replace(/\D/g, ""); // Hapus semua karakter non-angka
+            if (value === "") {
+                input.value = "";
+                return;
+            }
+            // Tambahkan titik pemisah ribuan
+            input.value = new Intl.NumberFormat('id-ID').format(value);
+        }
+
+        // Helper: Get Unformatted Number Back From Formatted String
+        function getRawNumber(str) {
+            return parseFloat(str.replace(/\./g, "")) || 0;
+        }
+
+        function logEvent(msg, type = 'info') {
+            let timeStr = new Date().toTimeString().split(' ')[0];
+            dbLogs.unshift({ time: timeStr, msg: msg, type: type });
+            localStorage.setItem('v6_db_logs', JSON.stringify(dbLogs));
+        }
+
+        function switchRole(role) {
+            activeRole = role;
+            localStorage.setItem('v6_role', role);
+            logEvent(`Hak akses beralih ke: [${role.toUpperCase()}].`, 'role');
+            syncRoleUI();
+        }
+
+        function syncRoleUI() {
+            document.querySelectorAll('.view-warga').forEach(el => activeRole === 'warga' ? el.classList.remove('hidden') : el.classList.add('hidden'));
+            document.querySelectorAll('.view-sekretaris').forEach(el => activeRole === 'sekretaris' ? el.classList.remove('hidden') : el.classList.add('hidden'));
+            document.querySelectorAll('.view-rt_rw').forEach(el => activeRole === 'rt_rw' ? el.classList.remove('hidden') : el.classList.add('hidden'));
+
+            const roles = ['warga', 'sekretaris', 'rt_rw'];
+            roles.forEach(r => {
+                const btn = document.getElementById(`role-${r}`);
+                if (r === activeRole) {
+                    if(r === 'warga') btn.className = "text-xs font-bold px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-xl shadow-emerald-500/10";
+                    if(r === 'sekretaris') btn.className = "text-xs font-bold px-5 py-2.5 rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-xl shadow-violet-500/10";
+                    if(r === 'rt_rw') btn.className = "text-xs font-bold px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-400 to-amber-600 text-slate-950 shadow-xl shadow-amber-500/10";
+                } else {
+                    btn.className = "text-xs font-semibold px-5 py-2.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/40";
+                }
+            });
+
+            renderAll();
+        }
+
+        function broadcastHeadline() {
+            const val = document.getElementById('input-headline').value;
+            if (val.trim() !== '') {
+                headlineText = `"${val}"`;
+                localStorage.setItem('v6_headline', headlineText);
+                logEvent(`Sekretaris memperbarui dekrit berita utama.`, 'update');
+                document.getElementById('input-headline').value = '';
+                renderAll();
+            }
+        }
+
+        function vote(choice) {
+            dbPoll[choice]++;
+            localStorage.setItem('v6_db_poll', JSON.stringify(dbPoll));
+            logEvent(`Elite Warga menyalurkan opsi suara plebisit.`, 'vote');
+            renderAll();
+        }
+
+        function launchPoll() {
+            const q = document.getElementById('input-poll-q').value;
+            if (q.trim() !== "") {
+                dbPoll = { question: q, yes: 0, no: 0 };
+                localStorage.setItem('v6_db_poll', JSON.stringify(dbPoll));
+                logEvent(`Sekretaris meluncurkan jajak pendapat baru.`, 'update');
+                document.getElementById('input-poll-q').value = '';
+                renderAll();
+            }
+        }
+
+        function resetPoll() {
+            dbPoll = { question: "Belum ada polling aktif terbaru.", yes: 0, no: 0 };
+            localStorage.setItem('v6_db_poll', JSON.stringify(dbPoll));
+            renderAll();
+        }
+
+        // Core Render Engine
+        function renderAll() {
+            let brutoIn = 0, brutoOut = 0;
+            const tBodyKas = document.getElementById('ledger-body');
+            tBodyKas.innerHTML = '';
+
+            dbKas.forEach((item, index) => {
+                if (item.jenis === 'masuk') brutoIn += item.nominal;
+                if (item.jenis === 'keluar') brutoOut += item.nominal;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/30 transition";
+                const isIn = item.jenis === 'masuk';
+
+                tr.innerHTML = `
+                    <td class="p-3.5 text-slate-500 text-[11px]">${item.tanggal}</td>
+                    <td class="p-3.5 font-bold text-slate-200">${item.keterangan}</td>
+                    <td class="p-3.5 text-slate-400 font-medium">${item.sektor}</td>
+                    <td class="p-3.5 text-right font-bold ${isIn ? 'text-emerald-400':'text-rose-400'}">${isIn ? '+':'-'}${formatIDR(item.nominal)}</td>
+                    ${activeRole === 'rt_rw' ? `<td class="p-3.5 text-center"><button onclick="deleteKas(${index})" class="text-rose-500 hover:underline">Hapus</button></td>` : ''}
+                `;
+                tBodyKas.appendChild(tr);
+            });
+
+            document.getElementById('ledger-empty').className = dbKas.length === 0 ? "block" : "hidden";
+
+            const nettSaldo = brutoIn - brutoOut;
+            const alokasiSosial = nettSaldo * 0.15;
+            const alokasiPembangunan = nettSaldo * 0.10;
+            const kasUtamaMurni = nettSaldo - alokasiSosial - alokasiPembangunan;
+
+            document.getElementById('card-masuk').innerText = formatIDR(brutoIn);
+            document.getElementById('card-keluar').innerText = formatIDR(brutoOut);
+            document.getElementById('card-saldo').innerText = formatIDR(kasUtamaMurni);
+            document.getElementById('card-sosial').innerText = formatIDR(alokasiSosial);
+            document.getElementById('card-pembangunan').innerText = formatIDR(alokasiPembangunan);
+            document.getElementById('board-headline').innerText = headlineText;
+
+            // Update Polling UI
+            document.getElementById('poll-question').innerText = `"${dbPoll.question}"`;
+            const totalVotes = dbPoll.yes + dbPoll.no;
+            const yesPct = totalVotes === 0 ? 0 : Math.round((dbPoll.yes / totalVotes) * 100);
+            const noPct = totalVotes === 0 ? 0 : Math.round((dbPoll.no / totalVotes) * 100);
+            document.getElementById('poll-yes-pct').innerText = `${yesPct}%`;
+            document.getElementById('poll-no-pct').innerText = `${noPct}%`;
+
+            // Render Payment Queue Gateway
+            const tBodyQueue = document.getElementById('queue-body');
+            tBodyQueue.innerHTML = '';
+            dbQueueBayar.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800/30 text-[11px]";
+                
+                let actionBtn = "";
+                if (activeRole === 'rt_rw' && item.status === 'Pending') {
+                    actionBtn = `<td class="p-2.5 text-center"><button onclick="clearingPayment(${index})" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-extrabold px-3 py-1 rounded-md">Kliring Dana</button></td>`;
+                } else {
+                    actionBtn = activeRole === 'rt_rw' ? `<td class="p-2.5 text-emerald-400 text-center font-bold">✓ Sah</td>` : '';
+                }
+
+                tr.innerHTML = `
+                    <td class="p-2.5 font-semibold text-slate-200">${item.entitas}</td>
+                    <td class="p-2.5 text-slate-400">${item.kategori}</td>
+                    <td class="p-2.5 font-mono text-violet-400">${item.metode}</td>
+                    <td class="p-2.5 text-right font-bold text-amber-400">${formatIDR(item.nominal)}</td>
+                    ${actionBtn}
+                `;
+                tBodyQueue.appendChild(tr);
+            });
+
+            // Render Digital Receipt Archive For Citizens
+            const boxReceipts = document.getElementById('warga-receipt-box');
+            boxReceipts.innerHTML = '';
+            let hasReceipt = false;
+            dbQueueBayar.forEach(item => {
+                if (item.status === 'Lunas') {
+                    hasReceipt = true;
+                    const d = document.createElement('div');
+                    d.className = "p-2.5 bg-slate-950 border border-slate-800 rounded-lg flex justify-between items-center";
+                    d.innerHTML = `
+                        <div>
+                            <p class="font-bold text-slate-300">${item.kategori}</p>
+                            <p class="text-[10px] text-slate-500 font-mono">${item.id} • ${item.metode}</p>
+                        </div>
+                        <span class="text-emerald-400 font-bold font-mono">${formatIDR(item.nominal)}</span>
+                    `;
+                    boxReceipts.appendChild(d);
+                }
+            });
+            if(!hasReceipt) boxReceipts.innerHTML = `<p class="text-slate-600 text-center py-2">Belum ada kuitansi digital terverifikasi.</p>`;
+
+            // Document Center Rendering
+            const boxSurat = document.getElementById('container-surat');
+            boxSurat.innerHTML = '';
+            dbSurat.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs";
+                
+                let subInterface = "";
+                if (item.status === 'Pending' && activeRole === 'sekretaris') {
+                    subInterface = `
+                        <div class="flex gap-2 mt-2">
+                            <input type="text" id="no-surat-${index}" placeholder="No Surat" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-100 text-[11px] w-full">
+                            <button onclick="signDocument(${index})" class="bg-indigo-600 text-white font-bold text-[10px] px-3 rounded-md whitespace-nowrap">Sign</button>
+                        </div>`;
+                } else if (item.status === 'Selesai') {
+                    subInterface = `<p class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 w-fit mt-1">Ref Resmi: ${item.noSurat}</p>`;
+                } else {
+                    subInterface = `<p class="text-[10px] text-amber-500 mt-1">⏳ Proses validasi berkas</p>`;
+                }
+
+                div.innerHTML = `
+                    <h4 class="font-bold text-slate-200">${item.nama}</h4>
+                    <p class="text-slate-400 text-[11px]">${item.keperluan}</p>
+                    ${subInterface}
+                `;
+                boxSurat.appendChild(div);
+            });
+
+            // Aspiration Rendering
+            const boxAspirasi = document.getElementById('container-aspirasi');
+            boxAspirasi.innerHTML = '';
+            dbAspirasi.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs";
+                let action = item.status !== 'Terselesaikan' && activeRole === 'sekretaris' ? 
+                    `<button onclick="resolveAspirasi(${index})" class="text-[10px] text-blue-400 font-bold hover:underline block mt-1">Selesaikan Investigasi</button>` : 
+                    `<span class="text-[10px] ${item.status === 'Terselesaikan'?'text-slate-500 line-through':'text-blue-400'} font-bold">${item.status}</span>`;
+
+                div.innerHTML = `<p class="text-slate-300 leading-relaxed">${item.teks}</p>${action}`;
+                boxAspirasi.appendChild(div);
+            });
+
+            // Community Agenda Calendar
+            const boxAgenda = document.getElementById('container-agenda');
+            boxAgenda.innerHTML = '';
+            dbAgenda.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "p-2.5 bg-slate-950 rounded-xl border border-slate-800 text-xs flex justify-between items-center";
+                div.innerHTML = `
+                    <div>
+                        <p class="font-bold text-slate-200">${item.teks}</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Tarikh: ${item.tanggal}</p>
+                    </div>
+                    ${activeRole === 'sekretaris' ? `<button onclick="deleteAgenda(${index})" class="text-rose-500 font-bold">x</button>` : ''}
+                `;
+                boxAgenda.appendChild(div);
+            });
+
+            // Inventaris / Asset Rendering
+            const boxAssets = document.getElementById('container-assets');
+            boxAssets.innerHTML = '';
+            dbAssets.forEach((asset, index) => {
+                const isGood = asset.kondisi === 'Sangat Baik';
+                const d = document.createElement('div');
+                d.className = "p-2 bg-slate-950 border border-slate-800 rounded-lg flex justify-between items-center";
+                d.innerHTML = `
+                    <span class="font-medium text-slate-300">${asset.nama}</span>
+                    <span class="px-2 py-0.5 rounded text-[9px] font-bold ${isGood ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">${asset.kondisi}</span>
+                `;
+                boxAssets.appendChild(d);
+            });
+
+            // System Logs Render with Context Color
+            const logBox = document.getElementById('sys-logs');
+            logBox.innerHTML = '';
+            dbLogs.forEach(l => {
+                let color = "text-slate-400";
+                if(l.type === 'clear') color = "text-emerald-400 font-semibold";
+                if(l.type === 'update') color = "text-amber-400";
+                if(l.type === 'role') color = "text-purple-400";
+                logBox.innerHTML += `<div class="${color}"><span class="text-slate-600">[${l.time}]</span> ${l.msg}</div>`;
+            });
+        }
+
+        // Submisi Pipeline Controllers
+        document.getElementById('form-warga-bayar-v6').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let randId = 'TX-' + Math.floor(1000 + Math.random() * 9000);
+            let entitas = document.getElementById('v6-pay-warga').value;
+            let kategori = document.getElementById('v6-pay-kategori').value;
+            let metode = document.getElementById('v6-pay-metode').value;
+            
+            // Mengambil angka mentah dari input ber-titik
+            let rawNominal = getRawNumber(document.getElementById('v6-pay-nominal').value);
+
+            if(rawNominal <= 0) return alert('Masukkan nominal dana secara valid!');
+
+            dbQueueBayar.push({ id: randId, entitas, kategori, metode, nominal: rawNominal, status: 'Pending' });
+            localStorage.setItem('v6_db_queue', JSON.stringify(dbQueueBayar));
+            logEvent(`Warga [${entitas}] menyetor iuran ${kategori} senilai ${formatIDR(rawNominal)}.`, 'update');
+            this.reset();
+            alert('✓ Sukses. Setoran iuran masuk antrean kliring Buku Besar.');
+            renderAll();
+        });
+
+        document.getElementById('form-warga-surat').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let nama = document.getElementById('warga-surat-nama').value;
+            dbSurat.push({ nama, keperluan: document.getElementById('warga-surat-perlu').value, status: 'Pending', noSurat: '' });
+            localStorage.setItem('v6_db_surat', JSON.stringify(dbSurat));
+            logEvent(`Warga [${nama}] mengajukan pemohonan dokumen baru.`, 'update');
+            this.reset(); alert('✓ Berhasl dikirim ke sekretariat.');
+            renderAll();
+        });
+
+        document.getElementById('form-warga-aspirasi').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let teks = document.getElementById('warga-aspirasi-teks').value;
+            dbAspirasi.push({ teks, status: 'Dalam Peninjauan' });
+            localStorage.setItem('v6_db_aspirasi', JSON.stringify(dbAspirasi));
+            logEvent(`Aspirasi publik baru tersimpan di sistem kendali.`, 'info');
+            this.reset(); alert('✓ Laporan aspirasi tersimpan.');
+            renderAll();
+        });
+
+        document.getElementById('form-sek-agenda').addEventListener('submit', function(e) {
+            e.preventDefault();
+            dbAgenda.push({ teks: document.getElementById('agenda-teks').value, tanggal: document.getElementById('agenda-tgl').value });
+            localStorage.setItem('v6_db_agenda', JSON.stringify(dbAgenda));
+            logEvent(`Sekretaris merilis jadwal kegiatan baru.`, 'update');
+            this.reset();
+            renderAll();
+        });
+
+        document.getElementById('form-sek-asset').addEventListener('submit', function(e) {
+            e.preventDefault();
+            dbAssets.push({ nama: document.getElementById('asset-nama').value, kondisi: document.getElementById('asset-kondisi').value });
+            localStorage.setItem('v6_db_assets', JSON.stringify(dbAssets));
+            logEvent(`Sekretaris mendaftarkan barang aset lingkungan baru.`, 'update');
+            this.reset();
+            renderAll();
+        });
+
+        document.getElementById('form-rt-kas').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let jenis = document.getElementById('rt-jenis').value;
+            let keterangan = document.getElementById('rt-keterangan').value;
+            let rawNominal = getRawNumber(document.getElementById('rt-nominal').value);
+
+            if(rawNominal <= 0) return alert('Masukkan nominal dana secara valid!');
+
+            dbKas.push({ tanggal: new Date().toISOString().slice(0, 10), keterangan, sektor: 'Injeksi Manual RT', jenis, nominal: rawNominal });
+            localStorage.setItem('v6_db_kas', JSON.stringify(dbKas));
+            logEvent(`Ketua RT melakukan suntikan alokasi kas senilai ${formatIDR(rawNominal)}.`, 'update');
+            this.reset();
+            renderAll();
+        });
+
+        function clearingPayment(idx) {
+            let data = dbQueueBayar[idx];
+            data.status = 'Lunas';
+
+            dbKas.push({
+                tanggal: new Date().toISOString().slice(0, 10),
+                keterangan: `Kliring Otomatis: ${data.entitas}`,
+                sektor: data.kategori,
+                jenis: 'masuk',
+                nominal: data.nominal
+            });
+
+            localStorage.setItem('v6_db_queue', JSON.stringify(dbQueueBayar));
+            localStorage.setItem('v6_db_kas', JSON.stringify(dbKas));
+            logEvent(`RT meloloskan kliring iuran ID ${data.id} sebesar ${formatIDR(data.nominal)}.`, 'clear');
+            renderAll();
+        }
+
+        function signDocument(idx) {
+            const no = document.getElementById(`no-surat-${idx}`).value;
+            if(no.trim() === '') return alert('Nomor surat wajib diisi!');
+            dbSurat[idx].status = 'Selesai';
+            dbSurat[idx].noSurat = no;
+            localStorage.setItem('v6_db_surat', JSON.stringify(dbSurat));
+            logEvent(`Sekretaris menyetujui penerbitan berkas nomor ${no}.`, 'clear');
+            renderAll();
+        }
+
+        function resolveAspirasi(idx) {
+            dbAspirasi[idx].status = 'Terselesaikan';
+            localStorage.setItem('v6_db_aspirasi', JSON.stringify(dbAspirasi));
+            renderAll();
+        }
+
+        function deleteKas(idx) {
+            if(confirm("Hapus data mutasi keuangan ini?")) {
+                dbKas.splice(idx,1);
+                localStorage.setItem('v6_db_kas', JSON.stringify(dbKas));
+                renderAll();
+            }
+        }
+
+        function deleteAgenda(idx) {
+            dbAgenda.splice(idx,1);
+            localStorage.setItem('v6_db_agenda', JSON.stringify(dbAgenda));
+            renderAll();
+        }
+
+        function wipeEngine() {
+            if(confirm("Hapus basis data lokal keseluruhan?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function exportData() {
+            const strData = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
+            const dlNode = document.createElement('a');
+            dlNode.setAttribute("href", strData);
+            dlNode.setAttribute("download", `OMNIVAULT_LEDGER_V6.json`);
+            dlNode.click();
+        }
+
+        window.onload = syncRoleUI;
+    </script>
+</body>
+</html>
